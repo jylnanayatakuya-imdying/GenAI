@@ -68,7 +68,7 @@ def build_model_client(settings: dict[str, Any], model: str) -> OpenAIChatComple
         },
         temperature=settings["temperature"],
         max_tokens=settings["max_tokens"],
-        timeout=120,
+        timeout=900,
         max_retries=2,
         parallel_tool_calls=False,
         add_name_prefixes=True,
