@@ -1,0 +1,11 @@
+autogen-core
+openai
+autogen-agentchat==0.7.5
+autogen-ext[openai]==0.7.5
+python-dotenv==1.1.1
+httpx==0.28.1
+pytest
+
+# CODESYS toolchain HTTP service (codesys_service/)
+fastapi
+uvicorn

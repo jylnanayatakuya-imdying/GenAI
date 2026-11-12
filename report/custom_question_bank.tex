@@ -1,0 +1,157 @@
+% Custom Question Bank dataset section.
+% Intended to be included from the main report with \input{report/custom_question_bank}.
+% This fragment deliberately contains no preamble and no package imports.
+
+\section{Custom Question Bank}
+\label{sec:custom_question_bank}
+
+\subsection{Overview and Naming}
+The Custom Question Bank contains 12 original PLC programming tasks. They are named \texttt{C01}--\texttt{C12} and implemented as function blocks \texttt{FB\_C01}--\texttt{FB\_C12}. The public question bank uses \texttt{FB\_Q01}--\texttt{FB\_Q20}; the \texttt{C} prefix therefore keeps the custom blocks separate from the public ones.
+
+The 12 tasks are deliberately balanced across three axes: sorting/filtering, cyclic timing and safety logic. The public bank is dominated by state machines and alarm/debounce behaviour, so these axes add complementary coverage. Each task is stored in \texttt{data/custom\_questions.json} with its interface, difficulty, rationale, source record, LTL specification and test cases.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Custom Question Bank at a glance. I/O counts include all function-block inputs and outputs.}
+\label{tab:custom_overview}
+\begin{tabular}{|l|l|p{0.24\textwidth}|l|p{0.14\textwidth}|c|c|c|}
+\hline
+ID & POU & Title & Difficulty & Axis & I/O & Props. & Tests \\
+\hline
+C01 & \texttt{FB\_C01} & Product Reject and Filtering Station & Easy & Sorting / filtering & 4/5 & 3 & 2 \\
+C02 & \texttt{FB\_C02} & Two-Hand Safety Press & Easy & Safety logic & 4/3 & 3 & 2 \\
+C03 & \texttt{FB\_C03} & Automatic Barrier Gate & Easy & Cyclic timing & 3/3 & 3 & 2 \\
+C04 & \texttt{FB\_C04} & Star-Delta Motor Starter & Medium & Cyclic timing & 4/5 & 3 & 2 \\
+C05 & \texttt{FB\_C05} & Car Wash Sequence & Medium & Cyclic timing & 4/7 & 3 & 2 \\
+C06 & \texttt{FB\_C06} & Elevator Door Control & Medium & Safety logic & 6/6 & 3 & 3 \\
+C07 & \texttt{FB\_C07} & Bottle Height Sorting & Medium & Sorting / filtering & 4/6 & 3 & 2 \\
+C08 & \texttt{FB\_C08} & Greenhouse Irrigation Zones & Medium & Cyclic timing & 6/5 & 3 & 3 \\
+C09 & \texttt{FB\_C09} & Conveyor Zone Accumulation & Hard & Sorting / filtering & 6/7 & 3 & 3 \\
+C10 & \texttt{FB\_C10} & Boiler Purge and Ignition Sequence & Hard & Safety logic & 5/6 & 3 & 3 \\
+C11 & \texttt{FB\_C11} & Palletizer Layer Counting & Hard & Sorting / filtering & 3/5 & 3 & 1 \\
+C12 & \texttt{FB\_C12} & Safety Light Curtain Muting & Hard & Safety logic & 5/4 & 3 & 3 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Source and Adaptation Record}
+All tasks are original scenarios written for this project; no external question text was copied. The scenarios were synthesised from standard industrial PLC control patterns (IEC 61131-3 function blocks, safety interlocks, conveyor sequencing, batching and flame-proving sequences). The table below records the source type of each scenario.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Source record. All 12 scenarios use independent conception.}
+\label{tab:custom_sources}
+\begin{tabular}{|l|p{0.58\textwidth}|p{0.22\textwidth}|}
+\hline
+ID & Scenario & Source type \\
+\hline
+C01 & Product Reject and Filtering Station & Independent conception \\
+C02 & Two-Hand Safety Press & Independent conception \\
+C03 & Automatic Barrier Gate & Independent conception \\
+C04 & Star-Delta Motor Starter & Independent conception \\
+C05 & Car Wash Sequence & Independent conception \\
+C06 & Elevator Door Control & Independent conception \\
+C07 & Bottle Height Sorting & Independent conception \\
+C08 & Greenhouse Irrigation Zones & Independent conception \\
+C09 & Conveyor Zone Accumulation & Independent conception \\
+C10 & Boiler Purge and Ignition Sequence & Independent conception \\
+C11 & Palletizer Layer Counting & Independent conception \\
+C12 & Safety Light Curtain Muting & Independent conception \\
+\hline
+\end{tabular}
+\end{table}
+
+The adaptation procedure is common to all tasks. Each scenario was manually reduced to a single function block with deterministic scan-cycle behaviour, bounded timers and no vendor-specific libraries. Each task received an internal review against PLC realism; independent peer review is still pending.
+
+\subsection{Rationality of the Scenarios}
+Each scenario reflects a recognisable PLC function. The list below records why the task is realistic and which control problem it exercises.
+
+\begin{description}
+\item[C01 --- Product Reject and Filtering Station] A reject station is a common end-of-line filtering task: good and defective parts must be classified, counted and separated without stopping the conveyor until a batch is complete.
+\item[C02 --- Two-Hand Safety Press] Two-hand control prevents an operator from reaching into a press while it closes; the anti-tiedown timer catches a blocked or defeated button.
+\item[C03 --- Automatic Barrier Gate] Vehicle barriers combine a short open command, a hold-open condition and a delayed close; the safety beam must reopen the gate at any time.
+\item[C04 --- Star-Delta Motor Starter] Star-delta starting is a standard motor-control sequence that requires a timed transition, contactor interlocking and a latched overload fault.
+\item[C05 --- Car Wash Sequence] A car wash is a clean multi-step cyclic process: foam, brush, rinse and dry must run in order, and an emergency stop must abort the sequence safely.
+\item[C06 --- Elevator Door Control] Elevator doors combine limit switches, an obstacle detector and an automatic close timer; the obstacle must always win over a close command.
+\item[C07 --- Bottle Height Sorting] Height sorting is a realistic quality-gate task: an analog measurement must be filtered into accept/reject classes and the two streams counted independently.
+\item[C08 --- Greenhouse Irrigation Zones] Zone irrigation is a cyclic scheduling task with analog moisture thresholds; dry zones are watered in order and wet zones are skipped.
+\item[C09 --- Conveyor Zone Accumulation] Zone accumulation is a core material-handling function: parts must queue without collision, and a blocked zone must raise a jam alarm instead of stalling silently.
+\item[C10 --- Boiler Purge and Ignition Sequence] Burner start-up is safety-critical: a purge must precede ignition, flame must be proven within a fixed window, and failure must latch a lockout.
+\item[C11 --- Palletizer Layer Counting] Palletizing combines product counting, layer formation and a full-pallet handshake; it is a realistic batching and filtering problem.
+\item[C12 --- Safety Light Curtain Muting] Muting lets a pallet pass through a light curtain without tripping the safety stop, but only when two sensors confirm the correct sequence; a wrong sequence must alarm.
+\end{description}
+
+\subsection{Diversity Measurement}
+Diversity is measured along two dimensions: the primary control axis and the difficulty level. Each primary axis contains four questions, and the difficulty distribution is 3 easy, 5 medium and 4 hard.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Diversity by primary control axis.}
+\label{tab:custom_axes}
+\begin{tabular}{|l|l|c|}
+\hline
+Axis & Questions & Count \\
+\hline
+Sorting / filtering & C01, C07, C09, C11 & 4 \\
+Cyclic timing & C03, C04, C05, C08 & 4 \\
+Safety logic & C02, C06, C10, C12 & 4 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Difficulty distribution.}
+\label{tab:custom_difficulty}
+\begin{tabular}{|l|l|c|}
+\hline
+Difficulty & Questions & Count \\
+\hline
+Easy & C01, C02, C03 & 3 \\
+Medium & C04, C05, C06, C07, C08 & 5 \\
+Hard & C09, C10, C11, C12 & 4 \\
+\hline
+\end{tabular}
+\end{table}
+
+Additional diversity comes from the required skills: edge detection, timers, counters, analog thresholds, state machines, safety interlocks, jam detection and flame proving. The complete per-question tags are stored in the dataset JSON.
+
+\subsection{Formal Specifications}
+Every question is specified in linear temporal logic (LTL). Each question has three properties: a safety or invariant property, a response or sequencing property, and a recovery or termination property. Numeric conditions are represented as derived atoms, and timer conditions are represented by internal atoms mapped to the reference implementation's timer output. The full set of 36 formulas is given in Appendix~\ref{app:custom_ltl}.
+
+The specifications assume a periodic scan (20\,ms in the test cases) and that inputs change only at scan boundaries. The reference ST implementation is used only to validate the specifications and test cases; it is not shown to the coding agent.
+
+\subsection{Test Cases and Validation}
+Test cases follow the repository format used by \texttt{codesys\_service/run\_tests.py}. Each question has a JSON test-case file with interface declarations and one or more scenarios. A scenario contains inputs, expected outputs and optional hold times for timers. The cases cover initialisation, normal operation, priority or edge conditions, and fault recovery where applicable.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Test-case coverage and local validation results.}
+\label{tab:custom_validation}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+ID & Test cases & Steps & Dry check & Sim pass \\
+\hline
+C01 & 2 & 16 & VALID & 2/2 \\
+C02 & 2 & 10 & VALID & 2/2 \\
+C03 & 2 & 9 & VALID & 2/2 \\
+C04 & 2 & 9 & VALID & 2/2 \\
+C05 & 2 & 11 & VALID & 2/2 \\
+C06 & 3 & 10 & VALID & 3/3 \\
+C07 & 2 & 8 & VALID & 2/2 \\
+C08 & 3 & 7 & VALID & 3/3 \\
+C09 & 3 & 8 & VALID & 3/3 \\
+C10 & 3 & 13 & VALID & 3/3 \\
+C11 & 1 & 14 & VALID & 1/1 \\
+C12 & 3 & 13 & VALID & 3/3 \\
+\hline
+\end{tabular}
+\end{table}
+
+The local validation reports 28/28 simulation cases passing, and all 12 reference implementations pass the static check. The real CODESYS compilation results are reported by the experimental evaluation. The tests validate functional behaviour against the reference ST; they do not replace a CODESYS compile in the target environment.
+
