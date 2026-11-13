@@ -1,6 +1,6 @@
 # 实验结果实时记录（自研 Agent harness）
 
-最后更新：2026-11-12 23:29:39
+最后更新：2026-11-13 11:59:08
 
 > 每跑完一道题自动重建本文件。评测口径与 `evaluate.py` 一致：
 > 编译结果来自 CODESYS 服务（真实编译），用例结果来自本机仿真器
@@ -12,7 +12,7 @@
 
 | 实验 | 模型 | 进度 | 首次编译通过率 | 最终编译通过率 | 用例通过率 | held-out 用例通过率 | 整题通过率 | tokens (in/out) | 用时 (s) |
 |---|---|---|---|---|---|---|---|---|---|
-| 实验 3 | deepseek-v4-pro-0813 | 29/32 | 26/29 (89.7%) | 27/29 (93.1%) | 95/109 (87.2%) | 68/80 (85.0%) | 22/29 (75.9%) | 57189/447552 | 7315 |
+| 实验 3 | deepseek-v4-pro-0813 | 32/32 | 28/32 (87.5%) | 29/32 (90.6%) | 99/116 (85.3%) | 70/84 (83.3%) | 24/32 (75.0%) | 67614/520864 | 8500 |
 | 实验 4 | qwen3-coder-flash | 32/32 | 10/32 (31.2%) | 20/32 (62.5%) | 21/116 (18.1%) | 13/84 (15.5%) | 3/32 (9.4%) | 163666/59577 | 2182 |
 
 ## 实验 3：自研 harness × deepseek-v4-pro-0813
@@ -48,9 +48,9 @@
 | C07 | Bottle Height Sorting | custom | medium | ✅ | ✅ | 0 | 1 | 2/2 | ✅ | 370 | 950/25040 |  |
 | C08 | Greenhouse Irrigation Zones | custom | medium | ✅ | ✅ | 0 | 1 | 2/3 | ❌ | 286 | 971/19925 |  |
 | C09 | Conveyor Zone Accumulation | custom | hard | ✅ | ✅ | 0 | 1 | 3/3 | ✅ | 216 | 1058/14226 |  |
-| C10 | Boiler Purge and Ignition Sequence | custom | hard | | | | | | ⏳ 未运行 | | | |
-| C11 | Palletizer Layer Counting | custom | hard | | | | | | ⏳ 未运行 | | | |
-| C12 | Safety Light Curtain Muting | custom | hard | | | | | | ⏳ 未运行 | | | |
+| C10 | Boiler Purge and Ignition Sequence | custom | hard | ✅ | ✅ | 0 | 1 | 3/3 | ✅ | 347 | 1010/23041 |  |
+| C11 | Palletizer Layer Counting | custom | hard | ✅ | ✅ | 0 | 1 | 1/1 | ✅ | 244 | 869/14305 |  |
+| C12 | Safety Light Curtain Muting | custom | hard | ❌ | ❌ | – | 4 | 0/3 | ❌ | 594 | 8546/35966 | 编译未通过 期望 ':='，实际是 'ms1_rising' |
 
 ## 实验 4：自研 harness × qwen3-coder-flash
 
