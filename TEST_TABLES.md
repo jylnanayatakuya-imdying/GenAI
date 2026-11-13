@@ -1,6 +1,6 @@
 # 测试用例执行记录（按《测试用例模板与示例》）
 
-最后更新：2026-11-12 23:29:39
+最后更新：2026-11-13 11:59:08
 
 > 每个用例给出：用例名称、所属题目、初始状态、覆盖内容，以及逐扫描周期的
 > 输入、预期输出、**实际输出**和判定结果。同一题在不同模型下使用完全相同的用例与判定标准。
@@ -2406,13 +2406,13 @@
 | 覆盖内容 | emergency during foam, fault latch, reset, restart |
 | 实际输出及结果 | ✅ 通过 |
 
-| 周期 | StartButton | VehiclePresent | ResetButton | EmergencyStop | 预期 ConveyorMotor | 预期 FoamValve | 预期 Fault | 实际 ConveyorMotor | 实际 FoamValve | 实际 Fault | 检查内容 | 结果 |
+| 周期 | StartButton | VehiclePresent | EmergencyStop | ResetButton | 预期 ConveyorMotor | 预期 FoamValve | 预期 Fault | 实际 ConveyorMotor | 实际 FoamValve | 实际 Fault | 检查内容 | 结果 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 0 | 1 | 1 |  |  | 1 | 1 | 0 | 1 | 1 | 0 | cycle starts | PASS |
-| 1 | 0 |  |  | 1 | 0 | 0 | 1 | 0 | 0 | 1 | emergency stop | PASS |
-| 2 |  |  |  | 0 | 0 |  | 1 | 0 |  | 1 | fault remains latched | PASS |
-| 3 |  |  | 1 |  | 0 |  | 0 | 0 |  | 0 | reset | PASS |
-| 4 | 1 |  | 0 |  | 1 | 1 |  | 1 | 1 |  | restart | PASS |
+| 1 | 0 |  | 1 |  | 0 | 0 | 1 | 0 | 0 | 1 | emergency stop | PASS |
+| 2 |  |  | 0 |  | 0 |  | 1 | 0 |  | 1 | fault remains latched | PASS |
+| 3 |  |  |  | 1 | 0 |  | 0 | 0 |  | 0 | reset | PASS |
+| 4 | 1 |  |  | 0 | 1 | 1 |  | 1 | 1 |  | restart | PASS |
 
 
 ## C06 Elevator Door Control（`FB_C06`）
@@ -2631,6 +2631,168 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 0 | 1 | 1 | 1 | 1 | 0 | 0 | 1 | 0 | 0 | release runs zone 3 | PASS |
 | 1（保持 5100 ms） |  |  | 0 | 0 | 1 | 1 | 0 | 1 | 1 | zone 3 blocked, jam after 5 s | PASS |
+
+
+## C10 Boiler Purge and Ignition Sequence（`FB_C10`）
+
+- 编译：通过；用例通过 3/3；整题通过
+
+### TC01 purge, ignition and normal stop
+
+| 项目 | 填写内容 |
+|---|---|
+| 测试用例名称 | TC01 purge, ignition and normal stop |
+| 所属题目 | C10 Boiler Purge and Ignition Sequence（`FB_C10`） |
+| 初始状态 | burner off |
+| 输入与步骤 | 见下表，每行为一个扫描周期|
+| 预期输出 | 见下表“预期”列 |
+| 覆盖内容 | 3 s purge, 2 s ignition, flame proven, stop |
+| 实际输出及结果 | ✅ 通过 |
+
+| 周期 | StartButton | StopButton | EmergencyStop | FlameSensor | ResetButton | 预期 PurgeFan | 预期 Igniter | 预期 FuelValve | 预期 Lockout | 预期 Fault | 预期 FlameOn | 实际 PurgeFan | 实际 Igniter | 实际 FuelValve | 实际 Lockout | 实际 Fault | 实际 FlameOn | 检查内容 | 结果 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 |  | 0 | 0 | 0 | 0 | 0 |  | reset | PASS |
+| 1 | 1 |  |  |  | 0 | 1 | 0 | 0 |  |  |  | 1 | 0 | 0 |  |  |  | purge starts | PASS |
+| 2（保持 3100 ms） | 0 |  |  |  |  | 0 | 1 | 0 |  |  |  | 0 | 1 | 0 |  |  |  | ignition after purge | PASS |
+| 3 |  |  |  | 1 |  |  | 0 | 1 | 0 |  | 1 |  | 0 | 1 | 0 |  | 1 | flame proven | PASS |
+| 4 |  | 1 |  |  |  | 0 | 0 | 0 |  |  | 0 | 0 | 0 | 0 |  |  | 0 | normal stop | PASS |
+
+### TC02 failed ignition lockout
+
+| 项目 | 填写内容 |
+|---|---|
+| 测试用例名称 | TC02 failed ignition lockout |
+| 所属题目 | C10 Boiler Purge and Ignition Sequence（`FB_C10`） |
+| 初始状态 | burner off |
+| 输入与步骤 | 见下表，每行为一个扫描周期|
+| 预期输出 | 见下表“预期”列 |
+| 覆盖内容 | purge, ignition window expires, lockout, reset |
+| 实际输出及结果 | ✅ 通过 |
+
+| 周期 | StartButton | FlameSensor | ResetButton | 预期 PurgeFan | 预期 Igniter | 预期 FuelValve | 预期 Lockout | 预期 Fault | 实际 PurgeFan | 实际 Igniter | 实际 FuelValve | 实际 Lockout | 实际 Fault | 检查内容 | 结果 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | 1 | 0 |  | 1 |  |  |  |  | 1 |  |  |  |  | purge | PASS |
+| 1（保持 3100 ms） | 0 |  |  | 0 | 1 |  |  |  | 0 | 1 |  |  |  | ignition | PASS |
+| 2（保持 2100 ms） |  |  |  |  | 0 | 0 | 1 |  |  | 0 | 0 | 1 |  | no flame, lockout | PASS |
+| 3 |  |  | 1 |  |  |  | 0 | 0 |  |  |  | 0 | 0 | reset lockout | PASS |
+
+### TC03 emergency stop latch
+
+| 项目 | 填写内容 |
+|---|---|
+| 测试用例名称 | TC03 emergency stop latch |
+| 所属题目 | C10 Boiler Purge and Ignition Sequence（`FB_C10`） |
+| 初始状态 | burner off |
+| 输入与步骤 | 见下表，每行为一个扫描周期|
+| 预期输出 | 见下表“预期”列 |
+| 覆盖内容 | emergency during purge, fault latch, reset |
+| 实际输出及结果 | ✅ 通过 |
+
+| 周期 | StartButton | EmergencyStop | ResetButton | 预期 PurgeFan | 预期 Fault | 预期 Lockout | 实际 PurgeFan | 实际 Fault | 实际 Lockout | 检查内容 | 结果 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | 1 |  |  | 1 | 0 |  | 1 | 0 |  | purge | PASS |
+| 1 | 0 | 1 |  | 0 | 1 |  | 0 | 1 |  | emergency stop | PASS |
+| 2 |  | 0 |  | 0 | 1 |  | 0 | 1 |  | fault latched | PASS |
+| 3 |  |  | 1 |  | 0 | 0 |  | 0 | 0 | reset | PASS |
+
+
+## C11 Palletizer Layer Counting（`FB_C11`）
+
+- 编译：通过；用例通过 1/1；整题通过
+
+### TC01 two layers fill a pallet
+
+| 项目 | 填写内容 |
+|---|---|
+| 测试用例名称 | TC01 two layers fill a pallet |
+| 所属题目 | C11 Palletizer Layer Counting（`FB_C11`） |
+| 初始状态 | counts zero |
+| 输入与步骤 | 见下表，每行为一个扫描周期|
+| 预期输出 | 见下表“预期”列 |
+| 覆盖内容 | three boxes per layer, layer push pulse, full pallet, reset |
+| 实际输出及结果 | ✅ 通过 |
+
+| 周期 | RunSwitch | BoxPresent | ResetButton | 预期 BoxCount | 预期 LayerCount | 预期 ConveyorMotor | 预期 PalletFull | 预期 LayerPush | 实际 BoxCount | 实际 LayerCount | 实际 ConveyorMotor | 实际 PalletFull | 实际 LayerPush | 检查内容 | 结果 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | 1 | 0 | 1 | 0 | 0 | 1 | 0 |  | 0 | 0 | 1 | 0 |  | reset | PASS |
+| 1 |  | 1 | 0 | 1 |  | 1 |  |  | 1 |  | 1 |  |  | box 1 | PASS |
+| 2 |  | 0 |  | 1 |  |  |  |  | 1 |  |  |  |  | gap | PASS |
+| 3 |  | 1 |  | 2 |  |  |  |  | 2 |  |  |  |  | box 2 | PASS |
+| 4 |  | 0 |  | 2 |  |  |  |  | 2 |  |  |  |  | gap | PASS |
+| 5 |  | 1 |  | 0 | 1 | 0 |  | 1 | 0 | 1 | 0 |  | 1 | layer 1 push | PASS |
+| 6（保持 1100 ms） |  | 0 |  |  |  | 1 |  | 0 |  |  | 1 |  | 0 | push retracts | PASS |
+| 7 |  | 1 |  | 1 |  |  |  |  | 1 |  |  |  |  | box 4 | PASS |
+| 8 |  | 0 |  | 1 |  |  |  |  | 1 |  |  |  |  | gap | PASS |
+| 9 |  | 1 |  | 2 |  |  |  |  | 2 |  |  |  |  | box 5 | PASS |
+| 10 |  | 0 |  | 2 |  |  |  |  | 2 |  |  |  |  | gap | PASS |
+| 11 |  | 1 |  | 0 | 2 | 0 | 1 | 1 | 0 | 2 | 0 | 1 | 1 | layer 2 fills pallet | PASS |
+| 12（保持 1100 ms） |  | 0 |  |  |  | 0 | 1 | 0 |  |  | 0 | 1 | 0 | push retracts, pallet remains full | PASS |
+| 13 |  |  | 1 | 0 | 0 | 1 | 0 |  | 0 | 0 | 1 | 0 |  | reset pallet | PASS |
+
+
+## C12 Safety Light Curtain Muting（`FB_C12`）
+
+- 编译：**未通过**（用例记为未通过）；用例通过 0/3；整题未通过
+
+- 仿真器无法执行：期望 ':='，实际是 'ms1_rising'
+
+### TC01 curtain safety stop and reset
+
+| 项目 | 填写内容 |
+|---|---|
+| 测试用例名称 | TC01 curtain safety stop and reset |
+| 所属题目 | C12 Safety Light Curtain Muting（`FB_C12`） |
+| 初始状态 | conveyor enabled, curtain clear |
+| 输入与步骤 | 见下表，每行为一个扫描周期|
+| 预期输出 | 见下表“预期”列 |
+| 覆盖内容 | curtain blocked, safety stop latch, reset when clear |
+| 实际输出及结果 | ⚠️ 未执行；周期 -：解释器不支持: 期望 ':='，实际是 'ms1_rising' |
+
+| 周期 | RunSwitch | LightCurtain | MutingSensor1 | MutingSensor2 | ResetButton | 预期 ConveyorMotor | 预期 SafetyStop | 预期 Alarm | 预期 MutingActive | 实际 ConveyorMotor | 实际 SafetyStop | 实际 Alarm | 实际 MutingActive | 检查内容 | 结果 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | 1 | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 |  |  |  |  | reset | FAIL |
+| 1 |  | 1 |  |  | 0 | 0 | 1 |  | 0 |  |  |  |  | curtain blocks | 未执行 |
+| 2 |  | 0 |  |  |  | 0 | 1 |  |  |  |  |  |  | stop remains latched | 未执行 |
+| 3 |  |  |  |  | 1 | 1 | 0 |  |  |  |  |  |  | reset while clear | 未执行 |
+
+### TC02 valid muting sequence
+
+| 项目 | 填写内容 |
+|---|---|
+| 测试用例名称 | TC02 valid muting sequence |
+| 所属题目 | C12 Safety Light Curtain Muting（`FB_C12`） |
+| 初始状态 | conveyor enabled, curtain clear |
+| 输入与步骤 | 见下表，每行为一个扫描周期|
+| 预期输出 | 见下表“预期”列 |
+| 覆盖内容 | sensor 1 then sensor 2, curtain blocked, conveyor runs |
+| 实际输出及结果 | ⚠️ 未执行；周期 -：解释器不支持: 期望 ':='，实际是 'ms1_rising' |
+
+| 周期 | RunSwitch | MutingSensor1 | MutingSensor2 | LightCurtain | ResetButton | 预期 MutingActive | 预期 ConveyorMotor | 预期 SafetyStop | 预期 Alarm | 实际 MutingActive | 实际 ConveyorMotor | 实际 SafetyStop | 实际 Alarm | 检查内容 | 结果 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | 1 | 1 | 0 | 0 |  | 0 | 1 |  |  |  |  |  |  | sensor 1 armed | FAIL |
+| 1 |  |  | 1 | 1 |  | 1 | 1 | 0 | 0 |  |  |  |  | valid muting | 未执行 |
+| 2 |  | 1 | 1 | 1 |  | 1 | 1 |  |  |  |  |  |  | muting holds | 未执行 |
+| 3 |  | 0 | 0 | 1 |  | 0 | 0 | 1 |  |  |  |  |  | muting ends, curtain still blocked | 未执行 |
+| 4 |  |  |  | 0 | 1 |  | 1 | 0 |  |  |  |  |  | reset | 未执行 |
+
+### TC03 wrong sequence and muting timeout
+
+| 项目 | 填写内容 |
+|---|---|
+| 测试用例名称 | TC03 wrong sequence and muting timeout |
+| 所属题目 | C12 Safety Light Curtain Muting（`FB_C12`） |
+| 初始状态 | conveyor enabled, curtain clear |
+| 输入与步骤 | 见下表，每行为一个扫描周期|
+| 预期输出 | 见下表“预期”列 |
+| 覆盖内容 | sensor 2 first, alarm; sensor 1 alone 2 s, alarm |
+| 实际输出及结果 | ⚠️ 未执行；周期 -：解释器不支持: 期望 ':='，实际是 'ms1_rising' |
+
+| 周期 | RunSwitch | MutingSensor1 | MutingSensor2 | LightCurtain | ResetButton | 预期 Alarm | 预期 ConveyorMotor | 预期 MutingActive | 实际 Alarm | 实际 ConveyorMotor | 实际 MutingActive | 检查内容 | 结果 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | 1 | 0 | 1 | 0 |  | 1 | 0 | 0 |  |  |  | sensor 2 without sensor 1 | FAIL |
+| 1 |  |  | 0 |  | 1 | 0 | 1 |  |  |  |  | reset alarm | 未执行 |
+| 2（保持 2100 ms） |  | 1 |  |  | 0 | 1 | 0 |  |  |  |  | sensor 1 alone times out | 未执行 |
+| 3 |  | 0 |  |  | 1 | 0 | 1 |  |  |  |  | reset timeout | 未执行 |
 
 
 # qwen3-coder-flash（model_b）
@@ -5046,13 +5208,13 @@
 | 覆盖内容 | emergency during foam, fault latch, reset, restart |
 | 实际输出及结果 | ❌ 不通过；周期 0：ConveyorMotor 预期 1，实际 False；FoamValve 预期 1，实际 False；周期 3：ConveyorMotor 预期 0，实际 True |
 
-| 周期 | StartButton | VehiclePresent | ResetButton | EmergencyStop | 预期 ConveyorMotor | 预期 FoamValve | 预期 Fault | 实际 ConveyorMotor | 实际 FoamValve | 实际 Fault | 检查内容 | 结果 |
+| 周期 | StartButton | VehiclePresent | EmergencyStop | ResetButton | 预期 ConveyorMotor | 预期 FoamValve | 预期 Fault | 实际 ConveyorMotor | 实际 FoamValve | 实际 Fault | 检查内容 | 结果 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 0 | 1 | 1 |  |  | 1 | 1 | 0 | 0 | 0 | 0 | cycle starts | FAIL |
-| 1 | 0 |  |  | 1 | 0 | 0 | 1 | 0 | 0 | 1 | emergency stop | PASS |
-| 2 |  |  |  | 0 | 0 |  | 1 | 0 |  | 1 | fault remains latched | PASS |
-| 3 |  |  | 1 |  | 0 |  | 0 | 1 |  | 0 | reset | FAIL |
-| 4 | 1 |  | 0 |  | 1 | 1 |  | 1 | 1 |  | restart | PASS |
+| 1 | 0 |  | 1 |  | 0 | 0 | 1 | 0 | 0 | 1 | emergency stop | PASS |
+| 2 |  |  | 0 |  | 0 |  | 1 | 0 |  | 1 | fault remains latched | PASS |
+| 3 |  |  |  | 1 | 0 |  | 0 | 1 |  | 0 | reset | FAIL |
+| 4 | 1 |  |  | 0 | 1 | 1 |  | 1 | 1 |  | restart | PASS |
 
 
 ## C06 Elevator Door Control（`FB_C06`）
@@ -5330,12 +5492,12 @@
 | 覆盖内容 | emergency during purge, fault latch, reset |
 | 实际输出及结果 | ❌ 不通过；周期 0：PurgeFan 预期 1，实际 False；周期 1：PurgeFan 预期 0，实际 True |
 
-| 周期 | StartButton | ResetButton | EmergencyStop | 预期 PurgeFan | 预期 Fault | 预期 Lockout | 实际 PurgeFan | 实际 Fault | 实际 Lockout | 检查内容 | 结果 |
+| 周期 | StartButton | EmergencyStop | ResetButton | 预期 PurgeFan | 预期 Fault | 预期 Lockout | 实际 PurgeFan | 实际 Fault | 实际 Lockout | 检查内容 | 结果 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 0 | 1 |  |  | 1 | 0 |  | 0 | 0 |  | purge | FAIL |
-| 1 | 0 |  | 1 | 0 | 1 |  | 1 | 1 |  | emergency stop | FAIL |
-| 2 |  |  | 0 | 0 | 1 |  | 0 | 1 |  | fault latched | PASS |
-| 3 |  | 1 |  |  | 0 | 0 |  | 0 | 0 | reset | PASS |
+| 1 | 0 | 1 |  | 0 | 1 |  | 1 | 1 |  | emergency stop | FAIL |
+| 2 |  | 0 |  | 0 | 1 |  | 0 | 1 |  | fault latched | PASS |
+| 3 |  |  | 1 |  | 0 | 0 |  | 0 | 0 | reset | PASS |
 
 
 ## C11 Palletizer Layer Counting（`FB_C11`）
