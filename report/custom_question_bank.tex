@@ -1,5 +1,5 @@
 % Custom Question Bank dataset section.
-% Intended to be included from the main report with \input{report/custom_question_bank}.
+% Intended to be included from the main report with a relative \input{}.
 % This fragment deliberately contains no preamble and no package imports.
 
 \section{Custom Question Bank}
@@ -8,7 +8,7 @@
 \subsection{Overview and Naming}
 The Custom Question Bank contains 12 original PLC programming tasks. They are named \texttt{C01}--\texttt{C12} and implemented as function blocks \texttt{FB\_C01}--\texttt{FB\_C12}. The public question bank uses \texttt{FB\_Q01}--\texttt{FB\_Q20}; the \texttt{C} prefix therefore keeps the custom blocks separate from the public ones.
 
-The 12 tasks are deliberately balanced across three axes: sorting/filtering, cyclic timing and safety logic. The public bank is dominated by state machines and alarm/debounce behaviour, so these axes add complementary coverage. Each task is stored in \texttt{data/custom\_questions.json} with its interface, difficulty, rationale, source record, LTL specification and test cases.
+The 12 tasks are deliberately balanced across three axes: sorting/filtering, cyclic timing and safety logic. The public bank is dominated by state machines and alarm/debounce behaviour, so these axes add complementary coverage. Each task is recorded in the dataset file \texttt{custom\_questions.json} with its interface, difficulty, rationale, source record, LTL specification and test cases.
 
 \begin{table}[htbp]
 \centering
@@ -36,34 +36,7 @@ C12 & \texttt{FB\_C12} & Safety Light Curtain Muting & Hard & Safety logic & 5/4
 \end{table}
 
 \subsection{Source and Adaptation Record}
-All tasks are original scenarios written for this project; no external question text was copied. The scenarios were synthesised from standard industrial PLC control patterns (IEC 61131-3 function blocks, safety interlocks, conveyor sequencing, batching and flame-proving sequences). The table below records the source type of each scenario.
-
-\begin{table}[htbp]
-\centering
-\small
-\caption{Source record. All 12 scenarios use independent conception.}
-\label{tab:custom_sources}
-\begin{tabular}{|l|p{0.58\textwidth}|p{0.22\textwidth}|}
-\hline
-ID & Scenario & Source type \\
-\hline
-C01 & Product Reject and Filtering Station & Independent conception \\
-C02 & Two-Hand Safety Press & Independent conception \\
-C03 & Automatic Barrier Gate & Independent conception \\
-C04 & Star-Delta Motor Starter & Independent conception \\
-C05 & Car Wash Sequence & Independent conception \\
-C06 & Elevator Door Control & Independent conception \\
-C07 & Bottle Height Sorting & Independent conception \\
-C08 & Greenhouse Irrigation Zones & Independent conception \\
-C09 & Conveyor Zone Accumulation & Independent conception \\
-C10 & Boiler Purge and Ignition Sequence & Independent conception \\
-C11 & Palletizer Layer Counting & Independent conception \\
-C12 & Safety Light Curtain Muting & Independent conception \\
-\hline
-\end{tabular}
-\end{table}
-
-The adaptation procedure is common to all tasks. Each scenario was manually reduced to a single function block with deterministic scan-cycle behaviour, bounded timers and no vendor-specific libraries. Each task received an internal review against PLC realism; independent peer review is still pending.
+All 12 tasks are group-defined scenarios created for this project; no external question text was copied. Each scenario was synthesised from a standard industrial PLC control pattern (IEC 61131-3 function blocks, safety interlocks, conveyor sequencing, batching and flame proving). The adaptation procedure was common to all tasks: define the I/O contract, reduce the scenario to one function block, keep deterministic scan-cycle behaviour, use bounded standard timers and avoid vendor-specific libraries. The rationale list below records the specific control problem exercised by each task.
 
 \subsection{Rationality of the Scenarios}
 Each scenario reflects a recognisable PLC function. The list below records why the task is realistic and which control problem it exercises.
@@ -126,7 +99,7 @@ Every question is specified in linear temporal logic (LTL). Each question has th
 The specifications assume a periodic scan (20\,ms in the test cases) and that inputs change only at scan boundaries. The reference ST implementation is used only to validate the specifications and test cases; it is not shown to the coding agent.
 
 \subsection{Test Cases and Validation}
-Test cases follow the repository format used by \texttt{codesys\_service/run\_tests.py}. Each question has a JSON test-case file with interface declarations and one or more scenarios. A scenario contains inputs, expected outputs and optional hold times for timers. The cases cover initialisation, normal operation, priority or edge conditions, and fault recovery where applicable.
+Test cases follow the repository test-case format used by \texttt{run\_tests.py}. Each question has a JSON test-case file with interface declarations and one or more scenarios. A scenario contains inputs, expected outputs and optional hold times for timers. The cases cover initialisation, normal operation, priority or edge conditions, and fault recovery where applicable.
 
 \begin{table}[htbp]
 \centering

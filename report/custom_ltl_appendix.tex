@@ -1,14 +1,34 @@
 % Custom Question Bank LTL specification appendix.
-% Include after \appendix, e.g. \appendix \input{report/custom_ltl_appendix}.
+% Include after \appendix with a relative \input{}.
 % This fragment contains no preamble and no package imports.
 
 \section{Custom Question Bank LTL Specifications}
 \label{app:custom_ltl}
 
-This appendix lists the three LTL properties for each custom question. Atoms, assumptions and machine-readable formulas are stored in \texttt{specs/custom/Cxx.ltl.json}. The operators are: $\mathbf{G}$ (always), $\mathbf{F}$ (eventually), $\mathbf{X}$ (next scan), $\wedge$ (and), $\vee$ (or), $\neg$ (not) and $\rightarrow$ (implies).
+This appendix lists the three LTL properties for each custom question. Atoms, assumptions and machine-readable formulas are stored in \texttt{Cxx.ltl.json}. The operators are: $\mathbf{G}$ (always), $\mathbf{F}$ (eventually), $\mathbf{X}$ (next scan), $\wedge$ (and), $\vee$ (or), $\neg$ (not) and $\rightarrow$ (implies).
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Derived and internal atoms used in the LTL properties.}
+\label{tab:custom_atoms}
+\begin{tabular}{|l|l|p{0.58\textwidth}|}
+\hline
+Atom & Kind & Definition \\
+\hline
+\texttt{LeftOnlyTimerQ} & internal & \texttt{leftTimer.Q}: left button held alone for 500\,ms \\
+\texttt{RightOnlyTimerQ} & internal & \texttt{rightTimer.Q}: right button held alone for 500\,ms \\
+\texttt{HeightInRange} & derived & $40.0 \le \mathrm{HeightSensor} \le 60.0$ \\
+\texttt{HeightOutOfRange} & derived & Height outside $[40.0, 60.0]$ but inside the valid sensor range $[0.0, 100.0]$ \\
+\texttt{LayerComplete} & internal & \texttt{layerTrigger}: third box of a layer has been detected \\
+\hline
+\end{tabular}
+\end{table}
+
+All other atoms are interface variables defined in the corresponding question.
 
 \subsection*{C01 --- Product Reject and Filtering Station}
-\noindent POU: \texttt{FB\_C01}; file: \texttt{specs/custom/C01.ltl.json}.
+\noindent POU: \texttt{FB\_C01}; file: \texttt{C01.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Defective part is rejected}: $\mathbf{G}((PartPresent \wedge DefectSensor \wedge RunSwitch \wedge \neg BatchFull) \rightarrow RejectPusher)$
@@ -18,7 +38,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C02 --- Two-Hand Safety Press}
-\noindent POU: \texttt{FB\_C02}; file: \texttt{specs/custom/C02.ltl.json}.
+\noindent POU: \texttt{FB\_C02}; file: \texttt{C02.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Two-hand start}: $\mathbf{G}((LeftButton \wedge RightButton \wedge PartPresent \wedge \neg Fault) \rightarrow PressOutput)$
@@ -28,7 +48,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C03 --- Automatic Barrier Gate}
-\noindent POU: \texttt{FB\_C03}; file: \texttt{specs/custom/C03.ltl.json}.
+\noindent POU: \texttt{FB\_C03}; file: \texttt{C03.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Vehicle opens the gate}: $\mathbf{G}(VehiclePresent \rightarrow GateOpen)$
@@ -38,7 +58,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C04 --- Star-Delta Motor Starter}
-\noindent POU: \texttt{FB\_C04}; file: \texttt{specs/custom/C04.ltl.json}.
+\noindent POU: \texttt{FB\_C04}; file: \texttt{C04.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Overload trips all contactors}: $\mathbf{G}(Overload \rightarrow ( \neg MainContactor \wedge \neg StarContactor \wedge \neg DeltaContactor))$
@@ -48,7 +68,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C05 --- Car Wash Sequence}
-\noindent POU: \texttt{FB\_C05}; file: \texttt{specs/custom/C05.ltl.json}.
+\noindent POU: \texttt{FB\_C05}; file: \texttt{C05.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Emergency stop removes all actuators}: $\mathbf{G}(EmergencyStop \rightarrow \neg (ConveyorMotor \vee FoamValve \vee BrushMotor \vee RinseValve \vee DryFan))$
@@ -58,7 +78,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C06 --- Elevator Door Control}
-\noindent POU: \texttt{FB\_C06}; file: \texttt{specs/custom/C06.ltl.json}.
+\noindent POU: \texttt{FB\_C06}; file: \texttt{C06.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Obstacle prevents closing}: $\mathbf{G}(ObstacleSensor \rightarrow \neg DoorMotorClose)$
@@ -68,7 +88,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C07 --- Bottle Height Sorting}
-\noindent POU: \texttt{FB\_C07}; file: \texttt{specs/custom/C07.ltl.json}.
+\noindent POU: \texttt{FB\_C07}; file: \texttt{C07.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- In-range bottle is accepted}: $\mathbf{G}((PartPresent \wedge HeightInRange \wedge RunSwitch \wedge \neg Fault) \rightarrow AcceptGate)$
@@ -78,7 +98,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C08 --- Greenhouse Irrigation Zones}
-\noindent POU: \texttt{FB\_C08}; file: \texttt{specs/custom/C08.ltl.json}.
+\noindent POU: \texttt{FB\_C08}; file: \texttt{C08.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Valve implies pump}: $\mathbf{G}((Zone1Valve \vee Zone2Valve \vee Zone3Valve) \rightarrow Pump)$
@@ -88,7 +108,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C09 --- Conveyor Zone Accumulation}
-\noindent POU: \texttt{FB\_C09}; file: \texttt{specs/custom/C09.ltl.json}.
+\noindent POU: \texttt{FB\_C09}; file: \texttt{C09.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Zone 1 moves into a free zone 2}: $\mathbf{G}((Zone1Sensor \wedge \neg Zone2Sensor \wedge RunSwitch) \rightarrow Zone1Motor)$
@@ -98,7 +118,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C10 --- Boiler Purge and Ignition Sequence}
-\noindent POU: \texttt{FB\_C10}; file: \texttt{specs/custom/C10.ltl.json}.
+\noindent POU: \texttt{FB\_C10}; file: \texttt{C10.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Lockout removes all combustion outputs}: $\mathbf{G}(Lockout \rightarrow \neg (PurgeFan \vee Igniter \vee FuelValve))$
@@ -108,7 +128,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C11 --- Palletizer Layer Counting}
-\noindent POU: \texttt{FB\_C11}; file: \texttt{specs/custom/C11.ltl.json}.
+\noindent POU: \texttt{FB\_C11}; file: \texttt{C11.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Layer completion pushes}: $\mathbf{G}(LayerComplete \rightarrow LayerPush)$
@@ -118,7 +138,7 @@ This appendix lists the three LTL properties for each custom question. Atoms, as
 \end{small}
 
 \subsection*{C12 --- Safety Light Curtain Muting}
-\noindent POU: \texttt{FB\_C12}; file: \texttt{specs/custom/C12.ltl.json}.
+\noindent POU: \texttt{FB\_C12}; file: \texttt{C12.ltl.json}.
 \begin{small}
 \begin{itemize}
 \item \textbf{P1 --- Curtain stops the conveyor}: $\mathbf{G}((LightCurtain \wedge \neg MutingActive) \rightarrow SafetyStop)$
