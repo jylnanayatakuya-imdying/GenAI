@@ -1,1 +1,1 @@
-#四组实验的结果写在md文件里 其中Live record文件是概览，test table是具体通过情况
+#四组实验的结果写在md文件里 其中Live record文件是概览，test table是具体通过情况，写报告时请注意文件名里有codex的是用codex，没有的是用自研agent
